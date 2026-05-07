@@ -62,7 +62,7 @@ export const enUS: Translations = {
   welcome: {
     greeting: "Hello, again!",
     description:
-      "Welcome to 🦌 DeerFlow, an open source super agent. With built-in and custom skills, DeerFlow helps you search on the web, analyze data, and generate artifacts like slides, web pages and do almost anything.",
+      "Welcome to Qianyu Super Intelligent Agent. With its built-in and customizable skills, it can help you search and analyze data, as well as generate slides, images, tables, web pages, and more — it can do almost anything.",
 
     createYourOwnSkill: "Create Your Own Skill",
     createYourOwnSkillDescription:

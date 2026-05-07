@@ -70,7 +70,7 @@ export function WorkspaceNavMenu() {
         onOpenChange={setSettingsOpen}
         defaultSection={settingsDefaultSection}
       />
-      <SidebarMenu className="w-full">
+      {/* <SidebarMenu className="w-full">
         <SidebarMenuItem>
           {mounted ? (
             <DropdownMenu>
@@ -154,7 +154,7 @@ export function WorkspaceNavMenu() {
             </SidebarMenuButton>
           )}
         </SidebarMenuItem>
-      </SidebarMenu>
+      </SidebarMenu> */}
     </>
   );
 }

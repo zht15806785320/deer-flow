@@ -847,11 +847,11 @@ export function InputBox({
         )}
       </PromptInput>
 
-      {isWelcomeMode && searchParams.get("mode") !== "skill" && (
+      {/* {isWelcomeMode && searchParams.get("mode") !== "skill" && (
         <div className="flex items-center justify-center pt-2">
           <SuggestionList />
         </div>
-      )}
+      )} */}
 
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent>

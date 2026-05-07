@@ -72,6 +72,15 @@ const config = {
 
     return rewrites;
   },
+  redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/login",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default withNextra(config);

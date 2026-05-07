@@ -26,7 +26,7 @@ export function WorkspaceNavChatList() {
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
-        <SidebarMenuItem>
+        {/* <SidebarMenuItem>
           <SidebarMenuButton
             isActive={pathname.startsWith("/workspace/agents")}
             asChild
@@ -36,7 +36,7 @@ export function WorkspaceNavChatList() {
               <span>{t.sidebar.agents}</span>
             </Link>
           </SidebarMenuButton>
-        </SidebarMenuItem>
+        </SidebarMenuItem> */}
       </SidebarMenu>
     </SidebarGroup>
   );

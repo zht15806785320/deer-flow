@@ -10,7 +10,9 @@ import React, {
   type ReactNode,
 } from "react";
 
+import { fetch } from "@/core/api/fetcher";
 import { type User, buildLoginUrl } from "./types";
+import { clearToken } from "./token-handler";
 
 // Re-export for consumers
 export type { User };
@@ -56,6 +58,7 @@ export function AuthProvider({ children, initialUser }: AuthProviderProps) {
   const refreshUser = useCallback(async () => {
     try {
       setIsLoading(true);
+      // Use wrapped fetch - it automatically injects Authorization header
       const res = await fetch("/api/v1/auth/me", {
         credentials: "include",
       });
@@ -88,6 +91,7 @@ export function AuthProvider({ children, initialUser }: AuthProviderProps) {
     setUser(null);
 
     try {
+      // Use wrapped fetch - it automatically injects Authorization header
       await fetch("/api/v1/auth/logout", {
         method: "POST",
         credentials: "include",
@@ -96,6 +100,8 @@ export function AuthProvider({ children, initialUser }: AuthProviderProps) {
       console.error("Logout request failed:", err);
       // Still redirect even if logout request fails
     }
+    // Clear client token from cookie
+    clearToken();
 
     // Redirect to home page
     router.push("/");

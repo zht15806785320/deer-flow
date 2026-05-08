@@ -1,4 +1,7 @@
+import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
+
+import { ACCESS_TOKEN_COOKIE } from "@/core/auth/constants";
 
 const BACKEND_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "http://127.0.0.1:8001";
@@ -12,6 +15,13 @@ async function proxyRequest(request: NextRequest, pathname: string) {
   headers.delete("host");
   headers.delete("connection");
   headers.delete("content-length");
+
+  // Inject Authorization header from access_token cookie
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get(ACCESS_TOKEN_COOKIE);
+  if (accessToken) {
+    headers.set("Authorization", `Bearer ${accessToken.value}`);
+  }
 
   const hasBody = !["GET", "HEAD"].includes(request.method);
   const response = await fetch(buildBackendUrl(pathname), {

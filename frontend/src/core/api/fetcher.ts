@@ -1,4 +1,8 @@
-import { buildLoginUrl } from "@/core/auth/types";
+import {
+  getToken,
+  clearToken,
+  isTokenExpired,
+} from "@/core/auth/token-handler";
 
 /** HTTP methods that the gateway's CSRFMiddleware checks. */
 export type StateChangingMethod = "POST" | "PUT" | "DELETE" | "PATCH";
@@ -59,18 +63,26 @@ export async function fetch(
 ): Promise<Response> {
   const url = typeof input === "string" ? input : input.url;
 
-  // Inject CSRF for state-changing methods. GET/HEAD/OPTIONS/TRACE skip
-  // it to mirror the gateway's ``should_check_csrf`` logic exactly.
   let headers = init?.headers;
+
+  // 1. Inject Authorization Bearer Token (from localStorage)
+  // This supports both IAM redirect and internal login entry modes
+  const clientToken = getToken();
+  if (clientToken) {
+    headers = new Headers(headers);
+    if (!headers.has("Authorization")) {
+      headers.set("Authorization", `Bearer ${clientToken}`);
+    }
+  }
+
+  // 2. Inject CSRF Token for state-changing methods (keep existing behavior)
   if (isStateChangingMethod(init?.method ?? "GET")) {
-    const token = readCsrfCookie();
-    if (token) {
-      // Fresh Headers instance so we don't mutate caller-supplied objects.
-      const merged = new Headers(headers);
-      if (!merged.has("X-CSRF-Token")) {
-        merged.set("X-CSRF-Token", token);
+    const csrfToken = readCsrfCookie();
+    if (csrfToken) {
+      headers = new Headers(headers);
+      if (!headers.has("X-CSRF-Token")) {
+        headers.set("X-CSRF-Token", csrfToken);
       }
-      headers = merged;
     }
   }
 
@@ -80,8 +92,12 @@ export async function fetch(
     credentials: "include",
   });
 
+  // 3. Handle 401 - clear token and redirect to login
   if (res.status === 401) {
-    window.location.href = buildLoginUrl(window.location.pathname);
+    if (isTokenExpired()) {
+      clearToken();
+    }
+    window.location.href = `${window.sysConfig?.dify_logout_url}&target_url=${window.location.href}`;
     throw new Error("Unauthorized");
   }
 

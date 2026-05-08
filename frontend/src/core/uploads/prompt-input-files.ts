@@ -1,5 +1,7 @@
 import type { FileUIPart } from "ai";
 
+import { fetch } from "@/core/api/fetcher";
+
 export type PromptInputFilePart = FileUIPart & {
   // Transient submit-time handle to the original browser File; not serializable.
   file?: File;

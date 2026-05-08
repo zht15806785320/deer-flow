@@ -79,7 +79,7 @@ export function SettingsDialog(props: SettingsDialogProps) {
       },
       { id: "tools", label: t.settings.sections.tools, icon: WrenchIcon },
       { id: "skills", label: t.settings.sections.skills, icon: SparklesIcon },
-      { id: "about", label: t.settings.sections.about, icon: InfoIcon },
+      // { id: "about", label: t.settings.sections.about, icon: InfoIcon },
     ],
     [
       t.settings.sections.account,
@@ -143,7 +143,7 @@ export function SettingsDialog(props: SettingsDialogProps) {
                 />
               )}
               {activeSection === "notification" && <NotificationSettingsPage />}
-              {activeSection === "about" && <AboutSettingsPage />}
+              {/* {activeSection === "about" && <AboutSettingsPage />} */}
             </div>
           </ScrollArea>
         </div>

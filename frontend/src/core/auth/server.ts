@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 
 import { getGatewayConfig } from "./gateway-config";
 import { type AuthResult, userSchema } from "./types";
+import { ACCESS_TOKEN_COOKIE } from "./constants";
 
 const SSR_AUTH_TIMEOUT_MS = 5_000;
 
@@ -23,7 +24,14 @@ export async function getServerSideUser(): Promise<AuthResult> {
   }
 
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("access_token");
+  const sessionCookie = cookieStore.get(ACCESS_TOKEN_COOKIE);
+
+  // Build headers with both Cookie and Authorization (supports both auth methods)
+  const authHeaders: Record<string, string> = {};
+  if (sessionCookie) {
+    authHeaders["Cookie"] = `${ACCESS_TOKEN_COOKIE}=${sessionCookie.value}`;
+    authHeaders["Authorization"] = `Bearer ${sessionCookie.value}`;
+  }
 
   let internalGatewayUrl: string;
   try {
@@ -66,7 +74,7 @@ export async function getServerSideUser(): Promise<AuthResult> {
 
   try {
     const res = await fetch(`${internalGatewayUrl}/api/v1/auth/me`, {
-      headers: { Cookie: `access_token=${sessionCookie.value}` },
+      headers: authHeaders,
       cache: "no-store",
       signal: controller.signal,
     });

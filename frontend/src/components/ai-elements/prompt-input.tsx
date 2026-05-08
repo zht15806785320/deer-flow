@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/select";
 import type { PromptInputFilePart } from "@/core/uploads";
 import { splitUnsupportedUploadFiles } from "@/core/uploads";
+import { fetch } from "@/core/api/fetcher";
 import { isIMEComposing } from "@/lib/ime";
 import { cn } from "@/lib/utils";
 import type { ChatStatus } from "ai";

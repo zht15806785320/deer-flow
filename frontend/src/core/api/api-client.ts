@@ -6,37 +6,43 @@ import { getLangGraphBaseURL } from "../config";
 
 import { isStateChangingMethod, readCsrfCookie } from "./fetcher";
 import { sanitizeRunStreamOptions } from "./stream-mode";
+import { getToken } from "@/core/auth/token-handler";
 
 /**
- * SDK ``onRequest`` hook that mints the ``X-CSRF-Token`` header from the
- * live ``csrf_token`` cookie just before each outbound fetch.
+ * SDK ``onRequest`` hook that injects both:
+ * 1. ``Authorization: Bearer <token>`` from localStorage (supports IAM redirect)
+ * 2. ``X-CSRF-Token`` from cookie for state-changing methods
  *
- * Reading the cookie per-request (rather than baking it into the SDK's
- * ``defaultHeaders`` at construction) handles login / logout / password
+ * Reading cookies per-request handles login / logout / password
  * change cookie rotation transparently. Both the ``/api/langgraph/*`` SDK
- * path and the direct REST endpoints in ``fetcher.ts:fetchWithAuth``
- * share :func:`readCsrfCookie` and :const:`STATE_CHANGING_METHODS` so
- * the contract stays in lockstep.
+ * path and the direct REST endpoints in ``fetcher.ts`` share the same
+ * contract so behavior stays in lockstep.
  */
-function injectCsrfHeader(_url: URL, init: RequestInit): RequestInit {
-  if (!isStateChangingMethod(init.method ?? "GET")) {
-    return init;
-  }
-  const token = readCsrfCookie();
-  if (!token) return init;
+function injectAuthAndCsrfHeaders(_url: URL, init: RequestInit): RequestInit {
   const headers = new Headers(init.headers);
-  if (!headers.has("X-CSRF-Token")) {
-    headers.set("X-CSRF-Token", token);
+
+  // 1. Inject Authorization Bearer Token
+  const token = getToken();
+  if (token && !headers.has("Authorization")) {
+    headers.set("Authorization", `Bearer ${token}`);
   }
+
+  // 2. Inject CSRF Token for state-changing methods
+  if (isStateChangingMethod(init.method ?? "GET")) {
+    const csrfToken = readCsrfCookie();
+    if (csrfToken && !headers.has("X-CSRF-Token")) {
+      headers.set("X-CSRF-Token", csrfToken);
+    }
+  }
+
   return { ...init, headers };
 }
 
 function createCompatibleClient(isMock?: boolean): LangGraphClient {
   const apiUrl = getLangGraphBaseURL(isMock);
-  console.log(`Creating API client with base URL: ${apiUrl}`);
   const client = new LangGraphClient({
     apiUrl,
-    onRequest: injectCsrfHeader,
+    onRequest: injectAuthAndCsrfHeaders,
   });
 
   const originalRunStream = client.runs.stream.bind(client.runs);

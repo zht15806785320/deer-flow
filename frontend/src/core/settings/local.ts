@@ -17,9 +17,9 @@ export const DEFAULT_LOCAL_SETTINGS: LocalSettings = {
   },
 };
 
-export const LOCAL_SETTINGS_KEY = "deerflow.local-settings";
-export const THREAD_MODEL_KEY_PREFIX = "deerflow.thread-model.";
-export const THREAD_SKILLS_KEY_PREFIX = "deerflow.thread-skills.";
+export const LOCAL_SETTINGS_KEY = "qianyu.local-settings";
+export const THREAD_MODEL_KEY_PREFIX = "qianyu.thread-model.";
+export const THREAD_SKILLS_KEY_PREFIX = "qianyu.thread-skills.";
 
 function isBrowser(): boolean {
   return typeof window !== "undefined";

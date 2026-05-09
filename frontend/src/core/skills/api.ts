@@ -1,10 +1,19 @@
+import { buildQueryString } from "@/lib/utils";
 import { fetch } from "@/core/api/fetcher";
 import { getBackendBaseURL } from "@/core/config";
 
 import type { Skill } from "./type";
 
-export async function loadSkills() {
-  const skills = await fetch(`${getBackendBaseURL()}/api/skills`);
+export interface LoadSkillsParams {
+  enable_only?: boolean;
+  [key: string]: unknown;
+}
+
+export async function loadSkills(params?: LoadSkillsParams) {
+  const query = buildQueryString(params);
+  const skills = await fetch(
+    `${getBackendBaseURL()}/api/skills${query ? `?${query}` : ""}`,
+  );
   const json = await skills.json();
   return json.skills as Skill[];
 }

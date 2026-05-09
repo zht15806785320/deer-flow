@@ -1,13 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { enableSkill } from "./api";
+import { enableSkill, type LoadSkillsParams } from "./api";
 
 import { loadSkills } from ".";
 
-export function useSkills() {
+export function useSkills(params?: LoadSkillsParams) {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["skills"],
-    queryFn: () => loadSkills(),
+    queryKey: ["skills", params],
+    queryFn: () => loadSkills(params),
   });
   return { skills: data ?? [], isLoading, error };
 }

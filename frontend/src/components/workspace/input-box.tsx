@@ -11,6 +11,8 @@ import {
   RocketIcon,
   XIcon,
   ZapIcon,
+  ChevronDown,
+  X
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import {
@@ -59,8 +61,9 @@ import { fetch } from "@/core/api/fetcher";
 import { getBackendBaseURL } from "@/core/config";
 import { useI18n } from "@/core/i18n/hooks";
 import { useModels } from "@/core/models/hooks";
-import type { AgentThreadContext } from "@/core/threads";
+import type { LocalSettings } from "@/core/settings/local";
 import { textOfMessage } from "@/core/threads/utils";
+import { useSkills } from "@/core/skills/hooks";
 import { cn } from "@/lib/utils";
 
 import {
@@ -117,13 +120,7 @@ export function InputBox({
   assistantId?: string | null;
   status?: ChatStatus;
   disabled?: boolean;
-  context: Omit<
-    AgentThreadContext,
-    "thread_id" | "is_plan_mode" | "thinking_enabled" | "subagent_enabled"
-  > & {
-    mode: "flash" | "thinking" | "pro" | "ultra" | undefined;
-    reasoning_effort?: "minimal" | "low" | "medium" | "high";
-  };
+  context: LocalSettings["context"];
   extraHeader?: React.ReactNode;
   /**
    * Whether to render the input in welcome layout (vertically centered,
@@ -133,15 +130,7 @@ export function InputBox({
   isWelcomeMode?: boolean;
   threadId: string;
   initialValue?: string;
-  onContextChange?: (
-    context: Omit<
-      AgentThreadContext,
-      "thread_id" | "is_plan_mode" | "thinking_enabled" | "subagent_enabled"
-    > & {
-      mode: "flash" | "thinking" | "pro" | "ultra" | undefined;
-      reasoning_effort?: "minimal" | "low" | "medium" | "high";
-    },
-  ) => void;
+  onContextChange?: (context: LocalSettings["context"]) => void;
   onSubmit?: (message: PromptInputMessage) => void;
   onStop?: () => void;
 }) {
@@ -164,6 +153,8 @@ export function InputBox({
   const [pendingSuggestion, setPendingSuggestion] = useState<string | null>(
     null,
   );
+
+  const { skills: skillsList } = useSkills({ enable_only: true });
 
   useEffect(() => {
     if (models.length === 0) {
@@ -238,6 +229,16 @@ export function InputBox({
       });
     },
     [onContextChange, context, supportThinking],
+  );
+
+  const handleSkillsSelect = useCallback(
+    (skill: string) => {
+      onContextChange?.({
+        ...context,
+        skills: context.skills?.includes(skill) ? undefined : [skill],
+      });
+    },
+    [onContextChange, context],
   );
 
   const handleReasoningEffortSelect = useCallback(
@@ -794,6 +795,12 @@ export function InputBox({
                 </PromptInputActionMenuContent>
               </PromptInputActionMenu>
             )}
+            <SkillsSelector
+              skillsList={skillsList}
+              selectedSkills={context.skills}
+              onSelect={handleSkillsSelect}
+              label={t.inputBox.skills}
+            />
           </PromptInputTools>
           <PromptInputTools>
             <ModelSelector
@@ -959,5 +966,84 @@ function AddAttachmentsButton({ className }: { className?: string }) {
         <PaperclipIcon className="size-3" />
       </PromptInputButton>
     </Tooltip>
+  );
+}
+
+function SkillsSelector({
+  skillsList,
+  selectedSkills,
+  onSelect,
+  label,
+}: {
+  skillsList: { name: string; description?: string }[];
+  selectedSkills?: string[];
+  onSelect: (skill: string) => void;
+  label: string;
+}) {
+  return (
+    <PromptInputActionMenu>
+      <PromptInputActionMenuTrigger className="group gap-1! px-2!">
+        <div className="flex items-center gap-1.5">
+          <span className="max-w-40 truncate">
+            {selectedSkills?.length ? `${label}：${selectedSkills.join("、")}` : label}
+          </span>
+          {selectedSkills?.length ? (
+            <div
+              role="button"
+              tabIndex={0}
+              className="hidden size-3 cursor-pointer group-hover:block"
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(selectedSkills[0]!);
+              }}
+            >
+              <X className="size-3" />
+            </div>
+          ) : null}
+          <ChevronDown className={cn("size-3", selectedSkills?.length && "group-hover:hidden")} />
+        </div>
+      </PromptInputActionMenuTrigger>
+      <PromptInputActionMenuContent className="w-80">
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="text-muted-foreground text-xs">
+            {label}
+          </DropdownMenuLabel>
+          <PromptInputActionMenu>
+            {skillsList.map((item, index) => {
+              const isSelected = selectedSkills?.includes(item.name) ?? false;
+              return (
+                <PromptInputActionMenuItem
+                  key={index}
+                  className={cn(
+                    isSelected ? "text-accent-foreground" : "text-muted-foreground/65",
+                  )}
+                  onSelect={() => onSelect(item.name)}
+                >
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-1 font-bold">
+                      <SparklesIcon
+                        className={cn("mr-2 size-4", isSelected && "text-accent-foreground")}
+                      />
+                      <span>{item.name}</span>
+                    </div>
+                    {item.description && (
+                      <div className="pl-7 line-clamp-2 text-xs leading-relaxed">
+                        {item.description}
+                      </div>
+                    )}
+                  </div>
+                  {isSelected ? (
+                    <CheckIcon className="ml-auto size-4 shrink-0" />
+                  ) : (
+                    <div className="ml-auto size-4 shrink-0" />
+                  )}
+                </PromptInputActionMenuItem>
+              );
+            })}
+          </PromptInputActionMenu>
+        </DropdownMenuGroup>
+      </PromptInputActionMenuContent>
+    </PromptInputActionMenu>
   );
 }

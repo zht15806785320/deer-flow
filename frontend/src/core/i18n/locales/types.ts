@@ -68,6 +68,7 @@ export interface Translations {
     createSkillPrompt: string;
     addAttachments: string;
     mode: string;
+    skills: string;
     flashMode: string;
     flashModeDescription: string;
     reasoningMode: string;

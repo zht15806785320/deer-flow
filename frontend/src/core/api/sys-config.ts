@@ -10,5 +10,6 @@ export function useSysConfig() {
     queryKey: ["sys-config"],
     queryFn: loadSysConfig,
     staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
   });
 }

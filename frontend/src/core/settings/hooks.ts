@@ -8,6 +8,7 @@ import {
 import {
   getBaseSettingsSnapshot,
   getThreadModelSnapshot,
+  getThreadSkillsSnapshot,
   subscribe,
   updateLocalSettings,
   updateThreadSettings,
@@ -43,10 +44,22 @@ export function useThreadSettings(
     () => undefined,
   );
 
-  const settings = useMemo(
-    () => applyThreadModelOverride(baseSettings, threadModelName),
-    [baseSettings, threadModelName],
+  const threadSkills = useSyncExternalStore(
+    subscribe,
+    () => getThreadSkillsSnapshot(threadId),
+    () => undefined,
   );
+
+  const settings = useMemo(() => {
+    const base = applyThreadModelOverride(baseSettings, threadModelName);
+    return {
+      ...base,
+      context: {
+        ...base.context,
+        skills: threadSkills,
+      },
+    };
+  }, [baseSettings, threadModelName, threadSkills]);
 
   const setSettings = useCallback<LocalSettingsSetter>(
     (key, value) => {

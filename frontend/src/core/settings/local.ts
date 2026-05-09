@@ -13,11 +13,13 @@ export const DEFAULT_LOCAL_SETTINGS: LocalSettings = {
     model_name: undefined,
     mode: undefined,
     reasoning_effort: undefined,
+    skills: undefined,
   },
 };
 
 export const LOCAL_SETTINGS_KEY = "deerflow.local-settings";
 export const THREAD_MODEL_KEY_PREFIX = "deerflow.thread-model.";
+export const THREAD_SKILLS_KEY_PREFIX = "deerflow.thread-skills.";
 
 function isBrowser(): boolean {
   return typeof window !== "undefined";
@@ -43,6 +45,7 @@ export interface LocalSettings {
     model_name?: string | undefined;
     mode: "flash" | "thinking" | "pro" | "ultra" | undefined;
     reasoning_effort?: "minimal" | "low" | "medium" | "high";
+    skills?: string[];
   };
 }
 
@@ -88,6 +91,40 @@ export function saveThreadModelName(
     return;
   }
   localStorage.setItem(key, modelName);
+}
+
+function getThreadSkillsStorageKey(threadId: string): string {
+  return `${THREAD_SKILLS_KEY_PREFIX}${threadId}`;
+}
+
+export function getThreadSkills(threadId: string): string[] | undefined {
+  if (!isBrowser()) {
+    return undefined;
+  }
+  const json = localStorage.getItem(getThreadSkillsStorageKey(threadId));
+  if (!json) {
+    return undefined;
+  }
+  try {
+    return JSON.parse(json) as string[];
+  } catch {
+    return undefined;
+  }
+}
+
+export function saveThreadSkills(
+  threadId: string,
+  skills: string[] | undefined,
+) {
+  if (!isBrowser()) {
+    return;
+  }
+  const key = getThreadSkillsStorageKey(threadId);
+  if (!skills?.length) {
+    localStorage.removeItem(key);
+    return;
+  }
+  localStorage.setItem(key, JSON.stringify(skills));
 }
 
 export function applyThreadModelOverride(

@@ -9,10 +9,11 @@ import {
   PlusIcon,
   SparklesIcon,
   RocketIcon,
+  SearchIcon,
   XIcon,
   ZapIcon,
   ChevronDown,
-  X
+  X,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import {
@@ -42,6 +43,7 @@ import {
   usePromptInputController,
   type PromptInputMessage,
 } from "@/components/ai-elements/prompt-input";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ConfettiButton } from "@/components/ui/confetti-button";
 import {
@@ -233,13 +235,25 @@ export function InputBox({
 
   const handleSkillsSelect = useCallback(
     (skill: string) => {
+      const currentSkills = context.skills ?? [];
+      const isSelected = currentSkills.includes(skill);
+      const newSkills = isSelected
+        ? currentSkills.filter((s) => s !== skill)
+        : [...currentSkills, skill];
       onContextChange?.({
         ...context,
-        skills: context.skills?.includes(skill) ? undefined : [skill],
+        skills: newSkills.length > 0 ? newSkills : undefined,
       });
     },
     [onContextChange, context],
   );
+
+  const handleSkillsClear = useCallback(() => {
+    onContextChange?.({
+      ...context,
+      skills: undefined,
+    });
+  }, [onContextChange, context]);
 
   const handleReasoningEffortSelect = useCallback(
     (effort: "minimal" | "low" | "medium" | "high") => {
@@ -799,7 +813,7 @@ export function InputBox({
               skillsList={skillsList}
               selectedSkills={context.skills}
               onSelect={handleSkillsSelect}
-              label={t.inputBox.skills}
+              onClear={handleSkillsClear}
             />
           </PromptInputTools>
           <PromptInputTools>
@@ -973,75 +987,166 @@ function SkillsSelector({
   skillsList,
   selectedSkills,
   onSelect,
+  onClear,
   label,
 }: {
   skillsList: { name: string; description?: string }[];
   selectedSkills?: string[];
   onSelect: (skill: string) => void;
-  label: string;
+  onClear: () => void;
+  label?: string;
 }) {
+  const { t } = useI18n();
+  const skillsLabel = label ?? t.settings.skills.title;
+  const [search, setSearch] = useState("");
+
+  const filteredSkills = useMemo(() => {
+    if (!search.trim()) return skillsList;
+    const keyword = search.toLowerCase();
+    return skillsList.filter((item) =>
+      item.name.toLowerCase().includes(keyword),
+    );
+  }, [skillsList, search]);
+
+  const handleOpenChange = (open: boolean) => {
+    let timer = setTimeout(() => {
+      if (!open) setSearch("");
+      clearTimeout(timer);
+    }, 0);
+  };
+
+  const firstSkillName = selectedSkills?.[0] ?? null;
+
+  const remainingCount =
+    selectedSkills && selectedSkills.length > 1 ? selectedSkills.length - 1 : 0;
+
+  const selectedSkillsText = selectedSkills?.join("、") ?? "";
+
   return (
-    <PromptInputActionMenu>
+    <PromptInputActionMenu onOpenChange={handleOpenChange}>
       <PromptInputActionMenuTrigger className="group gap-1! px-2!">
         <div className="flex items-center gap-1.5">
           <span className="max-w-40 truncate">
-            {selectedSkills?.length ? `${label}：${selectedSkills.join("、")}` : label}
+            {selectedSkills?.length ? (
+              <>
+                <span className="inline-block max-w-24 truncate align-middle">
+                  {firstSkillName}
+                </span>
+                {remainingCount > 0 && (
+                  <Tooltip
+                    content={
+                      <div className="max-w-xs">
+                        <div className="font-medium mb-1">{skillsLabel}</div>
+                        <div className="text-xs opacity-90 whitespace-pre-wrap">
+                          {selectedSkillsText}
+                        </div>
+                      </div>
+                    }
+                  >
+                    <span className="ml-1 inline-flex cursor-pointer rounded bg-muted px-1 text-xs font-medium hover:bg-muted/80">
+                      +{remainingCount}
+                    </span>
+                  </Tooltip>
+                )}
+              </>
+            ) : (
+              skillsLabel
+            )}
           </span>
           {selectedSkills?.length ? (
             <div
               role="button"
               tabIndex={0}
-              className="hidden size-3 cursor-pointer group-hover:block"
+              className="hidden size-3 cursor-pointer group-hover:flex"
               onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => {
                 e.stopPropagation();
-                onSelect(selectedSkills[0]!);
+                onClear();
               }}
             >
               <X className="size-3" />
             </div>
           ) : null}
-          <ChevronDown className={cn("size-3", selectedSkills?.length && "group-hover:hidden")} />
+          <ChevronDown
+            className={cn(
+              "size-3",
+              selectedSkills?.length && "group-hover:hidden",
+            )}
+          />
         </div>
       </PromptInputActionMenuTrigger>
-      <PromptInputActionMenuContent className="w-80">
+      <PromptInputActionMenuContent
+        className="w-80"
+        side="bottom"
+        avoidCollisions={false}
+      >
         <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-muted-foreground text-xs">
-            {label}
-          </DropdownMenuLabel>
-          <PromptInputActionMenu>
-            {skillsList.map((item, index) => {
-              const isSelected = selectedSkills?.includes(item.name) ?? false;
-              return (
-                <PromptInputActionMenuItem
-                  key={index}
-                  className={cn(
-                    isSelected ? "text-accent-foreground" : "text-muted-foreground/65",
-                  )}
-                  onSelect={() => onSelect(item.name)}
-                >
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-1 font-bold">
-                      <SparklesIcon
-                        className={cn("mr-2 size-4", isSelected && "text-accent-foreground")}
-                      />
-                      <span>{item.name}</span>
-                    </div>
-                    {item.description && (
-                      <div className="pl-7 line-clamp-2 text-xs leading-relaxed">
-                        {item.description}
-                      </div>
+          <div className="relative px-2 py-1.5">
+            <Input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => e.stopPropagation()}
+              placeholder={t.settings.skills.searchPlaceholder}
+              className="border-input!"
+            />
+            {search && (
+              <button
+                type="button"
+                className="absolute top-1/2 right-3 -translate-y-1/2"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSearch("");
+                }}
+              >
+                <X className="text-muted-foreground hover:text-foreground size-4" />
+              </button>
+            )}
+          </div>
+          {filteredSkills.length === 0 ? (
+            <div className="text-muted-foreground py-6 text-center text-sm">
+              {t.settings.skills.noResults}
+            </div>
+          ) : (
+            <PromptInputActionMenu>
+              {filteredSkills.map((item, index) => {
+                const isSelected = selectedSkills?.includes(item.name) ?? false;
+                return (
+                  <PromptInputActionMenuItem
+                    key={index}
+                    className={cn(
+                      isSelected
+                        ? "text-accent-foreground"
+                        : "text-muted-foreground/65",
                     )}
-                  </div>
-                  {isSelected ? (
-                    <CheckIcon className="ml-auto size-4 shrink-0" />
-                  ) : (
-                    <div className="ml-auto size-4 shrink-0" />
-                  )}
-                </PromptInputActionMenuItem>
-              );
-            })}
-          </PromptInputActionMenu>
+                    onSelect={() => onSelect(item.name)}
+                  >
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-1 font-bold">
+                        <SparklesIcon
+                          className={cn(
+                            "mr-2 size-4",
+                            isSelected && "text-accent-foreground",
+                          )}
+                        />
+                        <span>{item.name}</span>
+                      </div>
+                      {item.description && (
+                        <div className="line-clamp-2 pl-7 text-xs leading-relaxed">
+                          {item.description}
+                        </div>
+                      )}
+                    </div>
+                    {isSelected ? (
+                      <CheckIcon className="ml-auto size-4 shrink-0" />
+                    ) : (
+                      <div className="ml-auto size-4 shrink-0" />
+                    )}
+                  </PromptInputActionMenuItem>
+                );
+              })}
+            </PromptInputActionMenu>
+          )}
         </DropdownMenuGroup>
       </PromptInputActionMenuContent>
     </PromptInputActionMenu>

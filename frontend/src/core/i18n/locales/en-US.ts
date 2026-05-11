@@ -84,7 +84,6 @@ export const enUS: Translations = {
       "We're going to build a new skill step by step with `skill-creator`. To start, what do you want this skill to do?",
     addAttachments: "Add attachments",
     mode: "Mode",
-    skills: "Skills",
     flashMode: "Flash",
     flashModeDescription: "Fast and efficient, but may not be accurate",
     reasoningMode: "Reasoning",
@@ -465,6 +464,8 @@ export const enUS: Translations = {
       emptyDescription:
         "Put your agent skill folders under the `/skills/custom` folder under the root folder of QianYu.",
       emptyButton: "Create Your First Skill",
+      searchPlaceholder: "Search skills...",
+      noResults: "No matching skills found",
     },
     notification: {
       title: "Notification",

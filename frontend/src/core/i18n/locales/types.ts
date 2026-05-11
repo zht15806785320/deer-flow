@@ -68,7 +68,6 @@ export interface Translations {
     createSkillPrompt: string;
     addAttachments: string;
     mode: string;
-    skills: string;
     flashMode: string;
     flashModeDescription: string;
     reasoningMode: string;
@@ -383,6 +382,8 @@ export interface Translations {
       emptyTitle: string;
       emptyDescription: string;
       emptyButton: string;
+      searchPlaceholder: string;
+      noResults: string;
     };
     notification: {
       title: string;

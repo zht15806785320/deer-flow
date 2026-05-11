@@ -84,7 +84,6 @@ export const zhCN: Translations = {
       "我们一起用 skill-creator 技能来创建一个技能吧。先问问我希望这个技能能做什么。",
     addAttachments: "添加附件",
     mode: "模式",
-    skills: "技能",
     flashMode: "闪速",
     flashModeDescription: "快速且高效的完成任务，但可能不够精准",
     reasoningMode: "思考",
@@ -445,6 +444,8 @@ export const zhCN: Translations = {
       emptyDescription:
         "将你的 Agent Skill 文件夹放在 乾宇 根目录下的 `/skills/custom` 文件夹中。",
       emptyButton: "创建你的第一个技能",
+      searchPlaceholder: "搜索技能...",
+      noResults: "未找到匹配的技能",
     },
     notification: {
       title: "通知",

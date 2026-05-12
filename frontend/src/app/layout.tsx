@@ -2,12 +2,14 @@ import "@/styles/globals.css";
 import "katex/dist/katex.min.css";
 
 import { type Metadata } from "next";
+import Script from "next/script";
 
 import { QueryClientProvider } from "@/components/query-client-provider";
 import { SysConfigProvider } from "@/components/sys-config-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { I18nProvider } from "@/core/i18n/context";
 import { detectLocaleServer } from "@/core/i18n/server";
+import { env } from "@/env";
 
 export const metadata: Metadata = {
   title: "乾宇超级智能体",
@@ -28,6 +30,10 @@ export default async function RootLayout({
             </ThemeProvider>
           </SysConfigProvider>
         </QueryClientProvider>
+        <Script
+          src={`${env.NEXT_PUBLIC_BASE_PATH ?? ""}/iconfont/iconfont.js`}
+          strategy="beforeInteractive"
+        />
       </body>
     </html>
   );

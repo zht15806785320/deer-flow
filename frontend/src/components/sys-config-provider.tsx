@@ -1,18 +1,9 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
-
-import { useSysConfig } from "@/core/api/sys-config";
-
-interface SysConfig {
-  app_name?: string;
-  app_name_en?: string;
-  dify_api_url?: string;
-  dify_target_url?: string;
-  dify_logout_url?: string;
-  apply_id?:string
-  [key: string]: unknown;
-}
+import { type ReactNode } from "react";
+import { Loader } from "@/components/ai-elements/loader";
+import { Button } from "@/components/ui/button";
+import { type SysConfig, useSysConfig } from "@/core/api/sys-config";
 
 declare global {
   interface Window {
@@ -31,15 +22,36 @@ export function SysConfigProvider({
 }: SysConfigProviderProps) {
   const { data, isLoading, isError } = useSysConfig();
 
-  useEffect(() => {
-    if (data) {
-      window.sysConfig = data;
-    }
-  }, [data]);
+  if (isLoading) {
+    return fallback ?? <LoadingFallback />;
+  }
 
-  if (isLoading || isError) {
-    return fallback ?? null;
+  if (isError) {
+    return fallback ?? <ErrorFallback />;
+  }
+
+  if (data) {
+    window.sysConfig = data;
   }
 
   return <>{children}</>;
+}
+
+function LoadingFallback() {
+  return (
+    <div className="flex h-screen items-center justify-center">
+      <Loader size={32} />
+    </div>
+  );
+}
+
+function ErrorFallback() {
+  return (
+    <div className="flex h-screen flex-col items-center justify-center gap-2">
+      <p className="text-muted-foreground text-sm">
+        Failed to load system config.
+      </p>
+      <Button onClick={() => window.location.reload()}>Retry</Button>
+    </div>
+  );
 }

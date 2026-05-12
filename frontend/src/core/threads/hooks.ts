@@ -2,7 +2,7 @@ import type { AIMessage, Message, Run } from "@langchain/langgraph-sdk";
 import type { ThreadsClient } from "@langchain/langgraph-sdk/client";
 import { useStream } from "@langchain/langgraph-sdk/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { toast } from "sonner";
 
 import type { PromptInputMessage } from "@/components/ai-elements/prompt-input";
@@ -24,6 +24,7 @@ import type {
   AgentThreadState,
   RunMessage,
   ThreadTokenUsageResponse,
+  DateGroup,
 } from "./types";
 
 export type ToolEndEvent = {
@@ -883,3 +884,71 @@ export function useRenameThread() {
     },
   });
 }
+
+export function usePinThread() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ threadId }: { threadId: string }) => {
+      const apiClient = getAPIClient();
+      await apiClient.threads.update(threadId, {
+        metadata: { pinned: true },
+      });
+    },
+    onSuccess() {
+      void queryClient.invalidateQueries({ queryKey: ["threads", "search"] });
+    },
+  });
+}
+
+export function useUnpinThread() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ threadId }: { threadId: string }) => {
+      const apiClient = getAPIClient();
+      await apiClient.threads.update(threadId, {
+        metadata: { pinned: false },
+      });
+    },
+    onSuccess() {
+      void queryClient.invalidateQueries({ queryKey: ["threads", "search"] });
+    },
+  });
+}
+
+/**
+ * 会话列表分组（按日期）
+ */
+export const useThreadsClassify = (threads: AgentThread[]): DateGroup[] => {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const groupOrder: Array<{
+    key: string;
+    value: number;
+    threads: AgentThread[];
+  }> = [
+    { key: "today", value: 0, threads: [] },
+    { key: "yesterday", value: 1, threads: [] },
+    { key: "week", value: 7, threads: [] },
+    { key: "month", value: 30, threads: [] },
+    { key: "halfYear", value: 180, threads: [] },
+    { key: "older", value: Infinity, threads: [] },
+  ];
+
+  for (const thread of threads) {
+    const updatedAt = new Date(thread.updated_at);
+    const diffDays = Math.floor(
+      (today.getTime() - updatedAt.getTime()) / (1000 * 60 * 60 * 24),
+    );
+
+    const target = groupOrder.find((item) => item.value >= diffDays);
+    target?.threads.push(thread);
+  }
+
+  return groupOrder
+    .filter((group) => group.threads.length > 0)
+    .map(({ key, threads }) => ({
+      key,
+      threads,
+    }));
+};

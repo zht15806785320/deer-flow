@@ -14,6 +14,8 @@ export interface Translations {
     edit: string;
     rename: string;
     share: string;
+    pin:string;
+    unPin:string;
     openInNewWindow: string;
     close: string;
     more: string;
@@ -114,10 +116,19 @@ export interface Translations {
   sidebar: {
     recentChats: string;
     newChat: string;
+    createChat:string;
     chats: string;
     demoChats: string;
     agents: string;
     quickActions:string;
+    pinned:string;
+    searchPlaceholder: string;
+    today: string;
+    yesterday: string;
+    week: string;
+    month: string;
+    halfYear: string;
+    older: string;
   };
 
   // Agents

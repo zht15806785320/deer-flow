@@ -45,3 +45,18 @@ export interface ThreadTokenUsageResponse {
     middleware: number;
   };
 }
+
+export interface DateGroup {
+  key: string;
+  threads: AgentThread[];
+}
+
+export interface ChatListItemProps {
+  thread: AgentThread;
+  isPinned: boolean;
+  pathname: string;
+  onDelete: (threadId: string) => void;
+  onRename: (threadId: string, currentTitle: string) => void;
+  onPin: (threadId: string) => void;
+  onUnpin: (threadId: string) => void;
+}

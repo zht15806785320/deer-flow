@@ -482,7 +482,7 @@ export function InputBox({
       )}
       <PromptInput
         className={cn(
-          "bg-background/85 rounded-2xl backdrop-blur-sm transition-all duration-300 ease-out *:data-[slot='input-group']:rounded-2xl",
+          "bg-background/85 rounded-2xl shadow backdrop-blur-sm transition-all duration-300 ease-out *:data-[slot='input-group']:rounded-2xl",
           className,
         )}
         disabled={disabled}
@@ -503,7 +503,7 @@ export function InputBox({
         </PromptInputAttachments>
         <PromptInputBody className="absolute top-0 right-0 left-0 z-3">
           <PromptInputTextarea
-            className={cn("size-full")}
+            className={cn("size-full min-h-24")}
             disabled={disabled}
             placeholder={t.inputBox.placeholder}
             autoFocus={autoFocus}
@@ -533,7 +533,7 @@ export function InputBox({
                     : "flash"
                 }
               >
-                <PromptInputActionMenuTrigger className="gap-1! px-2!">
+                <PromptInputActionMenuTrigger className="gap-1! px-2! text-primary!">
                   <div>
                     {context.mode === "flash" && <ZapIcon className="size-3" />}
                     {context.mode === "thinking" && (
@@ -543,15 +543,10 @@ export function InputBox({
                       <GraduationCapIcon className="size-3" />
                     )}
                     {context.mode === "ultra" && (
-                      <RocketIcon className="size-3 text-[#dabb5e]" />
+                      <RocketIcon className="size-3" />
                     )}
                   </div>
-                  <div
-                    className={cn(
-                      "text-xs font-normal",
-                      context.mode === "ultra" ? "golden-text" : "",
-                    )}
-                  >
+                  <div className="text-xs font-normal">
                     {(context.mode === "flash" && t.inputBox.flashMode) ||
                       (context.mode === "thinking" &&
                         t.inputBox.reasoningMode) ||
@@ -590,7 +585,7 @@ export function InputBox({
                         </div>
                       </div>
                       {context.mode === "flash" ? (
-                        <CheckIcon className="ml-auto size-4" />
+                        <CheckIcon className="text-primary ml-auto size-4" />
                       ) : (
                         <div className="ml-auto size-4" />
                       )}
@@ -620,7 +615,7 @@ export function InputBox({
                           </div>
                         </div>
                         {context.mode === "thinking" ? (
-                          <CheckIcon className="ml-auto size-4" />
+                          <CheckIcon className="text-primary ml-auto size-4" />
                         ) : (
                           <div className="ml-auto size-4" />
                         )}
@@ -650,7 +645,7 @@ export function InputBox({
                         </div>
                       </div>
                       {context.mode === "pro" ? (
-                        <CheckIcon className="ml-auto size-4" />
+                        <CheckIcon className="text-primary ml-auto size-4" />
                       ) : (
                         <div className="ml-auto size-4" />
                       )}
@@ -665,26 +660,15 @@ export function InputBox({
                     >
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-1 font-bold">
-                          <RocketIcon
-                            className={cn(
-                              "mr-2 size-4",
-                              context.mode === "ultra" && "text-[#dabb5e]",
-                            )}
-                          />
-                          <div
-                            className={cn(
-                              context.mode === "ultra" && "golden-text",
-                            )}
-                          >
-                            {t.inputBox.ultraMode}
-                          </div>
+                          <RocketIcon className="mr-2 size-4" />
+                          <div>{t.inputBox.ultraMode}</div>
                         </div>
                         <div className="pl-7 text-xs">
                           {t.inputBox.ultraModeDescription}
                         </div>
                       </div>
                       {context.mode === "ultra" ? (
-                        <CheckIcon className="ml-auto size-4" />
+                        <CheckIcon className="text-primary ml-auto size-4" />
                       ) : (
                         <div className="ml-auto size-4" />
                       )}
@@ -846,7 +830,7 @@ export function InputBox({
                         </span>
                       </div>
                       {m.name === context.model_name ? (
-                        <CheckIcon className="ml-auto size-4" />
+                        <CheckIcon className="ml-auto size-4 text-primary" />
                       ) : (
                         <div className="ml-auto size-4" />
                       )}
@@ -1036,14 +1020,14 @@ function SkillsSelector({
                   <Tooltip
                     content={
                       <div className="max-w-xs">
-                        <div className="font-medium mb-1">{skillsLabel}</div>
-                        <div className="text-xs opacity-90 whitespace-pre-wrap">
+                        <div className="mb-1 font-medium">{skillsLabel}</div>
+                        <div className="text-xs whitespace-pre-wrap opacity-90">
                           {selectedSkillsText}
                         </div>
                       </div>
                     }
                   >
-                    <span className="ml-1 inline-flex cursor-pointer rounded bg-muted px-1 text-xs font-medium hover:bg-muted/80">
+                    <span className="bg-muted hover:bg-muted/80 ml-1 inline-flex cursor-pointer rounded px-1 text-xs font-medium">
                       +{remainingCount}
                     </span>
                   </Tooltip>

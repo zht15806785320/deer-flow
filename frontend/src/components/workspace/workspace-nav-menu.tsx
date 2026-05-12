@@ -38,10 +38,9 @@ function NavMenuButtonContent({
   t: ReturnType<typeof useI18n>["t"];
 }) {
   return isSidebarOpen ? (
-    <div className="text-muted-foreground flex w-full items-center gap-2 text-left text-sm">
+    <div className="text-muted-foreground flex w-full items-center gap-2 text-left text-sm min-w-20">
       <SettingsIcon className="size-4" />
       <span>{t.workspace.settingsAndMore}</span>
-      {/* <ChevronsUpDown className="text-muted-foreground ml-auto size-4" /> */}
     </div>
   ) : (
     <div className="flex size-full items-center justify-center">
@@ -75,7 +74,7 @@ export function WorkspaceNavMenu() {
           {mounted ? (
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer h-8"
               onClick={() => {
                 setSettingsDefaultSection("appearance");
                 setSettingsOpen(true);

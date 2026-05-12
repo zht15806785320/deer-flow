@@ -25,6 +25,8 @@ export const enUS: Translations = {
     edit: "Edit",
     rename: "Rename",
     share: "Share",
+    pin: "Pin",
+    unPin: "Unpin",
     openInNewWindow: "Open in new window",
     close: "Close",
     more: "More",
@@ -79,7 +81,7 @@ export const enUS: Translations = {
 
   // Input Box
   inputBox: {
-    placeholder: "How can I assist you today?",
+    placeholder: "Hello, I am Qianyu Super Intelligent Agent",
     createSkillPrompt:
       "We're going to build a new skill step by step with `skill-creator`. To start, what do you want this skill to do?",
     addAttachments: "Add attachments",
@@ -169,11 +171,20 @@ export const enUS: Translations = {
   // Sidebar
   sidebar: {
     newChat: "New chat",
+    createChat:"Create chat",
     chats: "Chats",
     recentChats: "Recent chats",
     demoChats: "Demo chats",
     quickActions:"Quick actions",
     agents: "Agents",
+    pinned: "Pinned",
+    searchPlaceholder: "Search chat history",
+    today: "Today",
+    yesterday: "Yesterday",
+    week: "Last 7 days",
+    month: "Last 30 days",
+    halfYear: "Last 6 months",
+    older: "Older",
   },
 
   // Agents

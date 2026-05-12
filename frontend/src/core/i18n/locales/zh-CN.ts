@@ -25,6 +25,8 @@ export const zhCN: Translations = {
     edit: "编辑",
     rename: "重命名",
     share: "分享",
+    pin:"置顶",
+    unPin:"取消置顶",
     openInNewWindow: "在新窗口打开",
     close: "关闭",
     more: "更多",
@@ -79,7 +81,7 @@ export const zhCN: Translations = {
 
   // Input Box
   inputBox: {
-    placeholder: "今天我能为你做些什么？",
+    placeholder: "你好，我是乾宇超级智能体",
     createSkillPrompt:
       "我们一起用 skill-creator 技能来创建一个技能吧。先问问我希望这个技能能做什么。",
     addAttachments: "添加附件",
@@ -163,11 +165,20 @@ export const zhCN: Translations = {
   // Sidebar
   sidebar: {
     newChat: "新对话",
+    createChat:"创建对话",
     chats: "对话",
     recentChats: "最近的对话",
     demoChats: "演示对话",
     quickActions:"快捷功能",
     agents: "智能体",
+    pinned:"已置顶",
+    searchPlaceholder: "搜索历史对话",
+    today: "今天",
+    yesterday: "昨天",
+    week: "7天内",
+    month: "30天内",
+    halfYear: "半年内",
+    older: "更久以前",
   },
 
   // Agents

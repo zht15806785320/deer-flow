@@ -138,7 +138,7 @@ export default function ChatPage() {
               <ThreadTitle threadId={threadId} thread={thread} />
             </div>
             <div className="flex items-center gap-2">
-              <TokenUsageIndicator
+              {/* <TokenUsageIndicator
                 threadId={isNewThread ? undefined : threadId}
                 backendUsage={backendTokenUsage}
                 enabled={tokenUsageEnabled}
@@ -149,7 +149,7 @@ export default function ChatPage() {
                   setLocalSettings("tokenUsage", preferences)
                 }
               />
-              <ExportTrigger threadId={threadId} />
+              <ExportTrigger threadId={threadId} /> */}
               <ArtifactTrigger />
             </div>
           </header>

@@ -53,7 +53,7 @@ export function WorkspaceNavMenu() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsDefaultSection, setSettingsDefaultSection] = useState<
     "appearance" | "memory" | "tools" | "skills" | "notification" | "about"
-  >("appearance");
+  >("memory");
   const [mounted, setMounted] = useState(false);
   const { open: isSidebarOpen } = useSidebar();
   const { t } = useI18n();
@@ -76,7 +76,7 @@ export function WorkspaceNavMenu() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer h-8"
               onClick={() => {
-                setSettingsDefaultSection("appearance");
+                setSettingsDefaultSection("memory");
                 setSettingsOpen(true);
               }}
             >

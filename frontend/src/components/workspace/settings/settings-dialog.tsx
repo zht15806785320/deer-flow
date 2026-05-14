@@ -42,7 +42,7 @@ type SettingsDialogProps = React.ComponentProps<typeof Dialog> & {
 };
 
 export function SettingsDialog(props: SettingsDialogProps) {
-  const { defaultSection = "appearance", ...dialogProps } = props;
+  const { defaultSection = "memory", ...dialogProps } = props;
   const { t } = useI18n();
   const [activeSection, setActiveSection] =
     useState<SettingsSection>(defaultSection);
@@ -57,21 +57,21 @@ export function SettingsDialog(props: SettingsDialogProps) {
 
   const sections = useMemo(
     () => [
-      {
-        id: "account",
-        label: t.settings.sections.account,
-        icon: UserIcon,
-      },
-      {
-        id: "appearance",
-        label: t.settings.sections.appearance,
-        icon: PaletteIcon,
-      },
-      {
-        id: "notification",
-        label: t.settings.sections.notification,
-        icon: BellIcon,
-      },
+      // {
+      //   id: "account",
+      //   label: t.settings.sections.account,
+      //   icon: UserIcon,
+      // },
+      // {
+      //   id: "appearance",
+      //   label: t.settings.sections.appearance,
+      //   icon: PaletteIcon,
+      // },
+      // {
+      //   id: "notification",
+      //   label: t.settings.sections.notification,
+      //   icon: BellIcon,
+      // },
       {
         id: "memory",
         label: t.settings.sections.memory,
@@ -120,7 +120,7 @@ export function SettingsDialog(props: SettingsDialogProps) {
                         "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                         active
                           ? "bg-primary text-primary-foreground shadow-sm"
-                          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                          : "text-muted-foreground hover:bg-accent hover:text-foreground",
                       )}
                     >
                       <Icon className="size-4" />
@@ -133,8 +133,8 @@ export function SettingsDialog(props: SettingsDialogProps) {
           </nav>
           <ScrollArea className="h-full min-h-0 rounded-lg border">
             <div className="space-y-8 p-6">
-              {activeSection === "account" && <AccountSettingsPage />}
-              {activeSection === "appearance" && <AppearanceSettingsPage />}
+              {/* {activeSection === "account" && <AccountSettingsPage />}
+              {activeSection === "appearance" && <AppearanceSettingsPage />} */}
               {activeSection === "memory" && <MemorySettingsPage />}
               {activeSection === "tools" && <ToolSettingsPage />}
               {activeSection === "skills" && (
@@ -142,7 +142,7 @@ export function SettingsDialog(props: SettingsDialogProps) {
                   onClose={() => props.onOpenChange?.(false)}
                 />
               )}
-              {activeSection === "notification" && <NotificationSettingsPage />}
+              {/* {activeSection === "notification" && <NotificationSettingsPage />} */}
               {/* {activeSection === "about" && <AboutSettingsPage />} */}
             </div>
           </ScrollArea>

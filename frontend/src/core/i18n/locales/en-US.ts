@@ -474,7 +474,7 @@ export const enUS: Translations = {
     skills: {
       title: "Agent Skills",
       description:
-        "Manage the configuration and enabled status of the agent skills.",
+        "Browse and manage AI capabilities.",
       createSkill: "Create skill",
       emptyTitle: "No agent skill yet",
       emptyDescription:

@@ -454,7 +454,7 @@ export const zhCN: Translations = {
     },
     skills: {
       title: "技能",
-      description: "管理 Agent Skill 配置和启用状态。",
+      description: "浏览和管理 AI 能力",
       createSkill: "新建技能",
       emptyTitle: "还没有技能",
       emptyDescription: "请在 乾宇 的技能市场中上传你的技能。",

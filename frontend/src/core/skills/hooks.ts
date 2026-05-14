@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { enableSkill, type LoadSkillsParams } from "./api";
-
+import { enableSkill, downloadSkill, uninstallSkill } from "./api";
+import type { LoadSkillsParams, EnableSkill } from "./type";
 import { loadSkills } from ".";
 
 export function useSkills(params?: LoadSkillsParams) {
@@ -15,15 +15,29 @@ export function useSkills(params?: LoadSkillsParams) {
 export function useEnableSkill() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({
-      skillName,
-      enabled,
-    }: {
-      skillName: string;
-      enabled: boolean;
-    }) => {
+    mutationFn: async ({ skillName, enabled }: EnableSkill) => {
       await enableSkill(skillName, enabled);
     },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["skills"] });
+    },
+  });
+}
+
+export function useDownloadSkill() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (skillId: string) => downloadSkill(skillId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["skills"] });
+    },
+  });
+}
+
+export function useUninstallSkill() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (skillId: string) => uninstallSkill(skillId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["skills"] });
     },

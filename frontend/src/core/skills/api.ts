@@ -2,12 +2,7 @@ import { buildQueryString } from "@/lib/utils";
 import { fetch } from "@/core/api/fetcher";
 import { getBackendBaseURL } from "@/core/config";
 
-import type { Skill } from "./type";
-
-export interface LoadSkillsParams {
-  enable_only?: boolean;
-  [key: string]: unknown;
-}
+import type { Skill, LoadSkillsParams } from "./type";
 
 export async function loadSkills(params?: LoadSkillsParams) {
   const query = buildQueryString(params);
@@ -68,5 +63,24 @@ export async function installSkill(
     };
   }
 
+  return response.json();
+}
+
+// 安装/更新
+export async function downloadSkill(skillId: string) {
+  const response = await fetch(
+    `${getBackendBaseURL()}/api/skills/download/${skillId}`,
+  );
+  return response.json();
+}
+
+// 卸载
+export async function uninstallSkill(skillId: string) {
+  const response = await fetch(
+    `${getBackendBaseURL()}/api/skills/${skillId}`,
+    {
+      method: "DELETE",
+    },
+  );
   return response.json();
 }

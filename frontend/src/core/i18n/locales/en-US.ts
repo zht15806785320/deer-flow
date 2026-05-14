@@ -19,6 +19,7 @@ export const enUS: Translations = {
 
   // Common
   common: {
+    all: "All",
     home: "Home",
     settings: "Settings",
     delete: "Delete",
@@ -52,6 +53,9 @@ export const enUS: Translations = {
     exportAsMarkdown: "Export as Markdown",
     exportAsJSON: "Export as JSON",
     exportSuccess: "Conversation exported",
+    type: "Type",
+    installStatus: "Install status",
+    enabledStatus: "Enabled",
   },
 
   // Home
@@ -171,11 +175,11 @@ export const enUS: Translations = {
   // Sidebar
   sidebar: {
     newChat: "New chat",
-    createChat:"Create chat",
+    createChat: "Create chat",
     chats: "Chats",
     recentChats: "Recent chats",
     demoChats: "Demo chats",
-    quickActions:"Quick actions",
+    quickActions: "Quick actions",
     agents: "Agents",
     pinned: "Pinned",
     searchPlaceholder: "Search chat history",
@@ -474,10 +478,17 @@ export const enUS: Translations = {
       createSkill: "Create skill",
       emptyTitle: "No agent skill yet",
       emptyDescription:
-        "Put your agent skill folders under the `/skills/custom` folder under the root folder of QianYu.",
+        "Please upload your skills to the Qianyu Skill Marketplace.",
       emptyButton: "Create Your First Skill",
       searchPlaceholder: "Search skills...",
       noResults: "No matching skills found",
+      Installed: "Installed",
+      Uninstalled: "Not installed",
+      HasUpdate: "Update available",
+      LatestVersion: "Up to date",
+      Update: "Update",
+      Install: "Install",
+      Uninstall: "Uninstall",
     },
     notification: {
       title: "Notification",

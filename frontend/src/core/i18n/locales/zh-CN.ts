@@ -19,14 +19,15 @@ export const zhCN: Translations = {
 
   // Common
   common: {
+    all: "全部",
     home: "首页",
     settings: "设置",
     delete: "删除",
     edit: "编辑",
     rename: "重命名",
     share: "分享",
-    pin:"置顶",
-    unPin:"取消置顶",
+    pin: "置顶",
+    unPin: "取消置顶",
     openInNewWindow: "在新窗口打开",
     close: "关闭",
     more: "更多",
@@ -52,6 +53,9 @@ export const zhCN: Translations = {
     exportAsMarkdown: "导出为 Markdown",
     exportAsJSON: "导出为 JSON",
     exportSuccess: "对话已导出",
+    type: "类型",
+    installStatus: "安装状态",
+    enabledStatus: "启用状态",
   },
 
   // Home
@@ -165,13 +169,13 @@ export const zhCN: Translations = {
   // Sidebar
   sidebar: {
     newChat: "新对话",
-    createChat:"创建对话",
+    createChat: "创建对话",
     chats: "对话",
     recentChats: "最近的对话",
     demoChats: "演示对话",
-    quickActions:"快捷功能",
+    quickActions: "快捷功能",
     agents: "智能体",
-    pinned:"已置顶",
+    pinned: "已置顶",
     searchPlaceholder: "搜索历史对话",
     today: "今天",
     yesterday: "昨天",
@@ -453,11 +457,17 @@ export const zhCN: Translations = {
       description: "管理 Agent Skill 配置和启用状态。",
       createSkill: "新建技能",
       emptyTitle: "还没有技能",
-      emptyDescription:
-        "将你的 Agent Skill 文件夹放在 乾宇 根目录下的 `/skills/custom` 文件夹中。",
+      emptyDescription: "请在 乾宇 的技能市场中上传你的技能。",
       emptyButton: "创建你的第一个技能",
       searchPlaceholder: "搜索技能...",
       noResults: "未找到匹配的技能",
+      Installed: "已安装",
+      Uninstalled: "未安装",
+      HasUpdate: "待更新",
+      LatestVersion: "已是最新版本",
+      Update: "更新",
+      Install: "安装",
+      Uninstall: "卸载",
     },
     notification: {
       title: "通知",

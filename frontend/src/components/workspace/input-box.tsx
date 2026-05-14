@@ -1061,7 +1061,7 @@ function SkillsSelector({
       </PromptInputActionMenuTrigger>
       <PromptInputActionMenuContent
         className="w-80"
-        side="bottom"
+        side="top"
         avoidCollisions={false}
       >
         <DropdownMenuGroup>
